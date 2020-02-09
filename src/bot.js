@@ -3,10 +3,10 @@ const puppeteer = require('puppeteer');
 const { LOGIN_MODE, URLS } = require('./constants');
 const { getAtRandomIndex, setTimeoutPromise } = require('./utils');
 
-let PFCookies;
+let pfCookies;
 
 if (process.env.LOGIN_MODE === LOGIN_MODE.BY_COOKIES) {
-  PFCookies = require('./cookies.js');
+  pfCookies = require('../cookies.js');
 }
 
 async function submitRate(page) {
@@ -94,30 +94,27 @@ function gotoPage(url) {
   };
 }
 
-async function loginWithCredentials(credentials, page) {
+exports.loginWithCredentials = async function loginWithCredentials(credentials, page) {
   return Promise.resolve(page)
     .then(gotoPage(URLS.LOGIN))
     .then(fillCredentials(credentials))
     .then(doLogin);
 }
 
-function loginWithCookies(cookies) {
+exports.loginWithCookies = function loginWithCookies(cookies) {
   return async (page) => Promise.resolve(page)
     .then(gotoPage(URLS.MY_TESTS))
     .then(setCookies(cookies));
 }
 
-function login(loginMode) {
+exports.login = function login({ loginMode, cookies, credentials }) {
   return (page) => {
     if (loginMode === LOGIN_MODE.BY_COOKIES) {
-      return loginWithCookies(PFCookies)(page);
+      return exports.loginWithCookies(cookies)(page);
     }
 
     if (loginMode === LOGIN_MODE.BY_CREDENTIALS) {
-      return loginWithCredentials({
-        email: process.env.PF_EMAIL,
-        password: process.env.PF_PASSWORD,
-      }, page);
+      return exports.loginWithCredentials(credentials, page);
     }
 
     return Promise.reject();
@@ -134,16 +131,17 @@ function onError(error) {
   process.exit(1);
 }
 
-function main() {
+exports.start = function start() {
   getBrowser()
     .then(getNewPage)
-    .then(login(process.env.LOGIN_MODE))
+    .then(exports.login({
+      loginMode: process.env.LOGIN_MODE,
+      credentials: { email: process.env.PF_EMAIL, password: process.env.PF_PASSWORD },
+      cookies: pfCookies,
+    }))
     .then(gotoPage(URLS.VOTE_DATING))
     .then(randomlyRate)
-    // .then(takeScreenshot('loginScreen'))
     .then(closePageBrowser)
     .then(finish)
     .catch(onError);
 }
-
-main();
