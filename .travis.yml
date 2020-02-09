@@ -1,5 +1,5 @@
 
 language: node_js
 node_js: node
-script: yarn run test:coverage
+script: yarn run test
 after_success: yarn run coveralls

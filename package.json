@@ -19,6 +19,6 @@
     "start": "node src/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "coveralls": "yarn run test:coverage | coveralls"
+    "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
   }
 }
