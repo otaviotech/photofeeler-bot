@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/jest": "^25.1.2",
+    "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
@@ -16,6 +17,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "coveralls": "coveralls"
   }
 }
