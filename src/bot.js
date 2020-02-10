@@ -9,7 +9,7 @@ if (process.env.LOGIN_MODE === LOGIN_MODE.BY_COOKIES) {
   pfCookies = require('../cookies.js');
 }
 
-async function submitRate(page) {
+exports.submitRate = async function submitRate(page) {
   await setTimeoutPromise(1000);
   await page.evaluate(() => {
     document.querySelector('.vote-button .submit').click();
@@ -17,7 +17,7 @@ async function submitRate(page) {
   return page;
 }
 
-async function getRateButtons(page) {
+exports.getRateButtons = async function getRateButtons(page) {
   const smart = await page.$$('.score-column.smart .btn');
   const trustWorthy = await page.$$('.score-column.trustworthy .btn');
   const attractive = await page.$$('.score-column.attractive .btn');
@@ -29,8 +29,8 @@ async function getRateButtons(page) {
   };
 }
 
-async function randomlyRate(page) {
-  const rateButtons = await getRateButtons(page);
+exports.randomlyRate = async function randomlyRate(page) {
+  const rateButtons = await exports.getRateButtons(page);
   const buttonsToClick = Object.values(rateButtons).map(getAtRandomIndex);
 
   const finishedRating = !await buttonsToClick[0].isIntersectingViewport();
@@ -40,18 +40,18 @@ async function randomlyRate(page) {
   }
 
   await Promise.all(buttonsToClick.map((button) => button.click()));
-  await submitRate(page);
+  await exports.submitRate(page);
   await setTimeoutPromise(2000);
 
   return randomlyRate(page);
 }
 
-async function getBrowser() {
-  // return puppeteer.launch({ headless: false });
-  return puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
+exports.getBrowser = async function getBrowser(p) {
+  // return p.launch({ headless: false });
+  return p.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
 }
 
-async function getNewPage(browser) {
+exports.getNewPage = async function getNewPage(browser) {
   return browser.newPage();
 }
 
@@ -62,7 +62,7 @@ function takeScreenshot(path) {
   }
 }
 
-async function closePageBrowser(page) {
+exports.closePageBrowser = async function closePageBrowser(page) {
   return page.browser().close();
 }
 
@@ -74,14 +74,14 @@ exports.fillCredentials = function fillCredentials(credentials) {
   };
 }
 
-function setCookies(cookies) {
+exports.setCookies = function setCookies(cookies) {
   return async (page) => {
     await page.setCookie(...cookies);
     return page;
   };
 }
 
-async function doLogin(page) {
+exports.doLogin = async function doLogin(page) {
   await page.click('input[type="submit"]');
   await page.waitForNavigation({ waitUntil: 'networkidle2' });
   return page;
@@ -132,16 +132,16 @@ function onError(error) {
 }
 
 exports.start = function start() {
-  getBrowser()
-    .then(getNewPage)
+  exports.getBrowser(puppeteer)
+    .then(exports.getNewPage)
     .then(exports.login({
       loginMode: process.env.LOGIN_MODE,
       credentials: { email: process.env.PF_EMAIL, password: process.env.PF_PASSWORD },
       cookies: pfCookies,
     }))
     .then(exports.gotoPage(URLS.VOTE_DATING))
-    .then(randomlyRate)
-    .then(closePageBrowser)
+    .then(exports.randomlyRate)
+    .then(exports.closePageBrowser)
     .then(finish)
     .catch(onError);
 }
