@@ -43,6 +43,22 @@ describe('Photofeeler Bot', () => {
     });
   });
 
+  describe('doLogin()', () => {
+    it('should click the login button, wait for the new page to load and return the page', async (done) => {
+      const pageMock = {
+        click: jest.fn(() => Promise.resolve()),
+        waitForNavigation: jest.fn(() => Promise.resolve()),
+      }
+
+      const result = await PhotofeelerBot.doLogin(pageMock);
+
+      expect(pageMock.click).toHaveBeenCalledWith('input[type="submit"]');
+      expect(pageMock.waitForNavigation).toHaveBeenCalledWith({ waitUntil: 'networkidle2' });
+      expect(result).toEqual(pageMock);
+      done();
+    });
+  });
+
   describe('gotoPage()', () => {
     it('should return page if success.', async (done) => {
       const pageMock = {
@@ -205,4 +221,35 @@ describe('Photofeeler Bot', () => {
       done();
     });
   });
+
+  describe('finish()', () => {
+    it('should log a final message and exit process with zero-code', () => {
+      console.log = jest.fn();
+      process.exit = jest.fn();
+
+      PhotofeelerBot.finish();
+
+      expect(console.log).toHaveBeenCalledWith('All rates done! Cheers!');
+      expect(process.exit).toHaveBeenCalledWith(0);
+
+      console.log.mockRestore();
+      process.exit.mockRestore();
+    });
+
+    describe('onError()', () => {
+      it('should log an error message and exit with a non-zero status (1)', () => {
+
+        console.error = jest.fn();
+        process.exit = jest.fn();
+
+        PhotofeelerBot.onError('Some error message.');
+
+        expect(console.error).toHaveBeenCalledWith('Some error message.');
+        expect(process.exit).toHaveBeenCalledWith(1);
+
+        console.error.mockRestore();
+        process.exit.mockRestore();
+      })
+    });
+  })
 })

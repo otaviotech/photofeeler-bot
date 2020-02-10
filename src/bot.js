@@ -121,12 +121,12 @@ exports.login = function login({ loginMode, cookies, credentials }) {
   }
 }
 
-function finish () {
+exports.finish = function finish () {
   console.log('All rates done! Cheers!');
   process.exit(0);
 }
 
-function onError(error) {
+exports.onError = function onError(error) {
   console.error(error);
   process.exit(1);
 }
@@ -142,6 +142,6 @@ exports.start = function start() {
     .then(exports.gotoPage(URLS.VOTE_DATING))
     .then(exports.randomlyRate)
     .then(exports.closePageBrowser)
-    .then(finish)
-    .catch(onError);
+    .then(exports.finish)
+    .catch(exports.onError);
 }
