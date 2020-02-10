@@ -66,7 +66,7 @@ async function closePageBrowser(page) {
   return page.browser().close();
 }
 
-function fillCredentials(credentials) {
+exports.fillCredentials = function fillCredentials(credentials) {
   return async (page) => {
     await page.type('input[type="email"]', credentials.email);
     await page.type('input[type="password"]', credentials.password);
@@ -97,7 +97,7 @@ exports.gotoPage = function gotoPage(url) {
 exports.loginWithCredentials = async function loginWithCredentials(credentials, page) {
   return Promise.resolve(page)
     .then(exports.gotoPage(URLS.LOGIN))
-    .then(fillCredentials(credentials))
+    .then(exports.fillCredentials(credentials))
     .then(doLogin);
 }
 

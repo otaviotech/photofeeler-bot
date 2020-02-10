@@ -58,4 +58,21 @@ describe('Photofeeler Bot', () => {
       done();
     });
   });
+
+  describe('fillCredentials()', () => {
+    it('should fill the credentials correctly and return the page if success.', async (done) => {
+      const pageMock = {
+        type: jest.fn(() => Promise.resolve()),
+      }
+
+      const credentials = { email: 'johndoe@email.com', password: '123456' }
+      const result = await PhotofeelerBot.fillCredentials(credentials)(pageMock);
+
+      expect(result).toEqual(pageMock);
+      expect(pageMock.type).toHaveBeenCalledWith('input[type="email"]', credentials.email);
+      expect(pageMock.type).toHaveBeenCalledWith('input[type="password"]', credentials.password);
+
+      done();
+    });
+  });
 })
