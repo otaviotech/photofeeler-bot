@@ -47,8 +47,8 @@ async function randomlyRate(page) {
 }
 
 async function getBrowser() {
-  return puppeteer.launch({ headless: false });
-  // return puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
+  // return puppeteer.launch({ headless: false });
+  return puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
 }
 
 async function getNewPage(browser) {
@@ -87,7 +87,7 @@ async function doLogin(page) {
   return page;
 }
 
-function gotoPage(url) {
+exports.gotoPage = function gotoPage(url) {
   return async (page) => {
     await page.goto(url, { waitUntil: 'networkidle2' });
     return page;
@@ -96,14 +96,14 @@ function gotoPage(url) {
 
 exports.loginWithCredentials = async function loginWithCredentials(credentials, page) {
   return Promise.resolve(page)
-    .then(gotoPage(URLS.LOGIN))
+    .then(exports.gotoPage(URLS.LOGIN))
     .then(fillCredentials(credentials))
     .then(doLogin);
 }
 
 exports.loginWithCookies = function loginWithCookies(cookies) {
   return async (page) => Promise.resolve(page)
-    .then(gotoPage(URLS.MY_TESTS))
+    .then(exports.gotoPage(URLS.MY_TESTS))
     .then(setCookies(cookies));
 }
 
@@ -139,7 +139,7 @@ exports.start = function start() {
       credentials: { email: process.env.PF_EMAIL, password: process.env.PF_PASSWORD },
       cookies: pfCookies,
     }))
-    .then(gotoPage(URLS.VOTE_DATING))
+    .then(exports.gotoPage(URLS.VOTE_DATING))
     .then(randomlyRate)
     .then(closePageBrowser)
     .then(finish)

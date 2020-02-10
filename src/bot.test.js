@@ -1,8 +1,6 @@
 const PhotofeelerBot = require('./bot');
 const CONSTANTS = require('./constants');
 
-jest.mock()
-
 describe('Photofeeler Bot', () => {
   describe('login()', () => {
     it('Should call the correct login implementation. (BY_COOKIES)', async (done) => {
@@ -42,6 +40,22 @@ describe('Photofeeler Bot', () => {
         expect(true).toBeTruthy();
         done();
       })
+    });
+  });
+
+  describe('gotoPage()', () => {
+    it('should return page if success.', async (done) => {
+      const pageMock = {
+        goto: jest.fn(() => Promise.resolve()),
+      }
+
+      const url = 'url'
+      const result = await PhotofeelerBot.gotoPage(url)(pageMock);
+
+      expect(result).toEqual(pageMock);
+      expect(pageMock.goto).toHaveBeenCalledWith(url, { waitUntil: 'networkidle2' });
+
+      done();
     });
   });
 })
