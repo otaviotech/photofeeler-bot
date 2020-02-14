@@ -161,7 +161,7 @@ describe('Photofeeler Bot', () => {
     it('should return a puppeteer browser', async (done) => {
       const browserMock = { close: () => {} };
       const puppeteerMock = { launch: jest.fn(() => Promise.resolve(browserMock)) };
-      const result = await PhotofeelerBot.getBrowser(puppeteerMock);
+      const result = await PhotofeelerBot.getBrowser(puppeteerMock, { headless: true });
       expect(result).toEqual(browserMock);
       done();
     });

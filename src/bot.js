@@ -46,9 +46,8 @@ exports.randomlyRate = async function randomlyRate(page) {
   return randomlyRate(page);
 }
 
-exports.getBrowser = async function getBrowser(p) {
-  // return p.launch({ headless: false });
-  return p.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
+exports.getBrowser = async function getBrowser(p, { headless }) {
+  return p.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless });
 }
 
 exports.getNewPage = async function getNewPage(browser) {
@@ -98,7 +97,7 @@ exports.loginWithCredentials = async function loginWithCredentials(credentials, 
   return Promise.resolve(page)
     .then(exports.gotoPage(URLS.LOGIN))
     .then(exports.fillCredentials(credentials))
-    .then(doLogin);
+    .then(exports.doLogin);
 }
 
 exports.loginWithCookies = function loginWithCookies(cookies) {
@@ -132,7 +131,7 @@ exports.onError = function onError(error) {
 }
 
 exports.start = function start() {
-  exports.getBrowser(puppeteer)
+  exports.getBrowser(puppeteer, { headless: process.env.HEADLESS })
     .then(exports.getNewPage)
     .then(exports.login({
       loginMode: process.env.LOGIN_MODE,
