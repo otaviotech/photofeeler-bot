@@ -15,4 +15,22 @@ describe('Utils', () => {
       expect(resultIndex).toBeGreaterThanOrEqual(0);
     })
   });
+
+  describe('parseBool', () => {
+    const values = [
+      { input: 'True', expectedResult: true },
+      { input: 'true', expectedResult: true },
+      { input: 'False', expectedResult: false },
+      { input: 'false', expectedResult: false },
+      { input: '0', expectedResult: false },
+      { input: '1', expectedResult: true },
+    ];
+
+    values.forEach(({ input, expectedResult }) => {
+      it(`should parse string value ${input} as a boolean ${expectedResult}`, () => {
+        const result = Utils.parseBool(input);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+  });
 });

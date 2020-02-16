@@ -1,7 +1,7 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
 const { LOGIN_MODE, URLS } = require('./constants');
-const { getAtRandomIndex, setTimeoutPromise } = require('./utils');
+const { getAtRandomIndex, setTimeoutPromise, parseBool } = require('./utils');
 
 let pfCookies;
 
@@ -131,7 +131,7 @@ exports.onError = function onError(error) {
 }
 
 exports.start = function start() {
-  exports.getBrowser(puppeteer, { headless: process.env.HEADLESS })
+  exports.getBrowser(puppeteer, { headless: parseBool(process.env.HEADLESS) })
     .then(exports.getNewPage)
     .then(exports.login({
       loginMode: process.env.LOGIN_MODE,
