@@ -22,6 +22,8 @@ describe('Utils', () => {
       { input: 'true', expectedResult: true },
       { input: 'False', expectedResult: false },
       { input: 'false', expectedResult: false },
+      { input: {}, expectedResult: false },
+      { input: null, expectedResult: false },
       { input: '0', expectedResult: false },
       { input: '1', expectedResult: true },
     ];
