@@ -38,7 +38,7 @@ exports.randomlyRate = async function randomlyRate(page) {
     return element.innerHTML.includes('Max');
   });
 
-  if (finishedRating || reachedMaxKarma)
+  if (finishedRating || reachedMaxKarma) {
     return page;
   }
 
