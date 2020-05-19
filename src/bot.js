@@ -34,8 +34,11 @@ exports.randomlyRate = async function randomlyRate(page) {
   const buttonsToClick = Object.values(rateButtons).map(getAtRandomIndex);
 
   const finishedRating = !await buttonsToClick[0].isIntersectingViewport();
+  const reachedMaxKarma = await page.$eval('.karma-value', (element) => {
+    return element.innerHTML.includes('Max');
+  });
 
-  if (finishedRating) {
+  if (finishedRating || reachedMaxKarma)
     return page;
   }
 
