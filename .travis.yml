@@ -1,7 +1,5 @@
 language: node_js
 node_js: node
-script: yarn run test
-after_success: yarn run coveralls
 
 jobs:
   include:
@@ -9,7 +7,10 @@ jobs:
       script: yarn run lint
     - stage: test
       script: yarn run test
+    - stage: coverage
+      script: yarn run coveralls
 
 stages:
   - lint
   - test
+  - coverage
