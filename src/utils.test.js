@@ -8,12 +8,12 @@ describe('Utils', () => {
     });
 
     it('Should return a random element in the passed array.', () => {
-      const arr = [1, 2, 3, 4]
+      const arr = [1, 2, 3, 4];
       const result = Utils.getAtRandomIndex(arr);
       const resultIndex = arr.indexOf(result);
       expect(resultIndex).toBeLessThanOrEqual(3);
       expect(resultIndex).toBeGreaterThanOrEqual(0);
-    })
+    });
   });
 
   describe('parseBool', () => {

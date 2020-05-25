@@ -8,4 +8,3 @@ exports.URLS = {
   MY_TESTS: 'https://www.photofeeler.com/my-tests',
   VOTE_DATING: 'https://www.photofeeler.com/vote/dating',
 };
-

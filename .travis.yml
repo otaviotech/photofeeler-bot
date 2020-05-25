@@ -1,5 +1,15 @@
-
 language: node_js
 node_js: node
 script: yarn run test
 after_success: yarn run coveralls
+
+jobs:
+  include:
+    - stage: lint
+      script: yarn run lint
+    - stage: test
+      script: yarn run test
+
+stages:
+  - lint
+  - test

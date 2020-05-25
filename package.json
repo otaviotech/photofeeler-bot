@@ -17,6 +17,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "lint": "eslint src/ --ext .js",
+    "lint:fix": "yarn run lint --fix",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
